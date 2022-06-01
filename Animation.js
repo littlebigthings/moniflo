@@ -8,7 +8,6 @@ function animateFromTopBtm() {
             ScrollTrigger.create({
                 trigger: triggerItem,
                 start: "top 50%",
-                markers: true,
                 onEnter: self => {
                     let animItem = self.trigger.querySelectorAll("[data-animate='top-btm']");
                     if (animItem.length > 0) {
@@ -37,7 +36,6 @@ function animateFromBtmTop() {
             ScrollTrigger.create({
                 trigger: triggerItem,
                 start: "top 50%",
-                markers: true,
                 onEnter: self => {
                     let animItem = self.trigger.querySelectorAll("[data-animate='btm-top']");
                     if (animItem.length > 0) {
@@ -68,7 +66,6 @@ function animateLeftRight() {
             ScrollTrigger.create({
                 trigger: triggerItem,
                 start: "top 50%",
-                markers: true,
                 onEnter: self => {
                     let animItemLeft = self.trigger.querySelectorAll("[data-animate='left-right']");
                     let animItemRight = self.trigger.querySelectorAll("[data-animate='right-left']");
