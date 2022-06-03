@@ -1,3 +1,4 @@
+import ScrollSmoother from './ScrollSmoother.js';
 function animateFromTopBtm() {
     let trigger = document.querySelectorAll("[data-animate='trigger-top-btm']");
     let items = document.querySelectorAll("[data-animate='top-btm']");
@@ -92,8 +93,19 @@ function animateLeftRight() {
     }
 };
 
+function smoothScroll(){
+    gsap.registerPlugin(ScrollSmoother);
+    ScrollSmoother.create({
+        smooth: 1,               // how long (in seconds) it takes to "catch up" to the native scroll position
+        effects: false,           // looks for data-speed and data-lag attributes on elements
+        smoothTouch: 0.1,
+        ease: "expo.out",        // much shorter smoothing time on touch devices (default is NO smoothing on touch devices)
+      });
+};
+
 if (window.screen.width > 768) {
     animateFromTopBtm();
     animateFromBtmTop();
     animateLeftRight();
+    smoothScroll();
 }
