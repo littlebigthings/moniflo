@@ -1,12 +1,10 @@
 class LEADFORMSUBMISSION {
-    constructor($formElm) {
-        this.$formElement = $formElm;
-        this.$form = this.$formElement.querySelector("form");
-        this.formId = this.$formElement.getAttribute("data-id");
-        this.$emailElement = this.$formElement.querySelector(".from-input");
-        this.$successBlock = this.$formElement.querySelector(".form-success");
-        this.$errorBlock = this.$formElement.querySelector(".failure-block");
-        this.$btn = this.$formElement.querySelector("[data-btn='form']");
+    constructor() {
+        this.$formElement = document.querySelectorAll("[data-form='leadform']");
+        this.$formArr = document.querySelectorAll("form");
+        this.$successBlockArr = document.querySelectorAll(".form-success");
+        this.$errorBlockAr = document.querySelectorAll(".failure-block");
+        this.$btnArr = document.querySelectorAll("[data-btn='form']");
         this.init();
     }
 
@@ -14,15 +12,15 @@ class LEADFORMSUBMISSION {
         this.addListener();
     }
 
-    async sendData() {
+    async sendData(id, email) {
         var requestOptions = {
             method: "POST",
             mode: 'no-cors',
-            body: JSON.stringify({ email: this.$emailElement.value })
+            body: JSON.stringify({ email: email })
         };
         try {
             const res = await fetch(
-                `https://customerioforms.com/forms/submit_action?site_id=9685324a6d458f100895&form_id=${this.formId}&success_url=https://moniflo.webflow.io/`,
+                `https://customerioforms.com/forms/submit_action?site_id=9685324a6d458f100895&form_id=${id}&success_url=https://moniflo.webflow.io/`,
                 requestOptions
             );
             if (res) {
@@ -39,32 +37,36 @@ class LEADFORMSUBMISSION {
 
     addListener() {
         this.showHideError();
-        this.$formElement.addEventListener("submit", (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            let resFromSf = this.sendData();
-            resFromSf.then(() => {
-                this.showHideError(false, true);
-            }).catch(() => {
-                this.$btn.value = "Try again."
-                this.showHideError(true, false);
+        this.$formElement.forEach(formItem => {
+            formItem.addEventListener("submit", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                let formId = event.currentTarget.getAttribute("form-id");
+                let email = event.target.querySelector("input[type='email']").value;
+                this.$btnArr.forEach(btn => btn.value = "Please wait...")
+                let resFromSf = this.sendData(formId, email);
+                resFromSf.then((res) => {
+                    if(res == undefined)return;
+                    this.showHideError(false, true);
+                }).catch((err) => {
+                    this.showHideError(true, false);
+                })
             })
         })
-
     }
 
     showHideError(showError = false, showSuccess= false) {
-        showError ? this.$errorBlock.style.display = "block" : this.$errorBlock.style.display = "none";
-        if(showSuccess){
-            this.$successBlock.style.display = "block";
-            this.$form.style.display = "none";
+        if(showSuccess && !showError){
+            this.$successBlockArr.forEach(block => {block.style.display = "block"})
+            this.$formArr.forEach(block => {block.style.display = "none"})
+            this.$errorBlockAr.forEach(block => {block.style.display = "none"})
         }
-        else{
-            this.$successBlock.style.display = "none";
-            this.$form.style.display = "block";
+        else if(!showSuccess && showError){
+            this.$successBlockArr.forEach(block => {block.style.display = "none"})
+            this.$errorBlockAr.forEach(block => {block.style.display = "block"})
+            this.$btnArr.forEach(btn => btn.value = "Try again.")
         }
     }
 
 }
-let formElm = document.querySelector(".common-form-wrapper");
-if (formElm != undefined) new LEADFORMSUBMISSION(formElm);
+new LEADFORMSUBMISSION;
