@@ -1,0 +1,85 @@
+.wg-drop.country-selector{
+    background-color: transparent !important;
+    /* border-left: 1px solid #024b51;
+    border-right: 1px solid #024b51;
+    border-top: 1px solid #024b51;
+    border-radius: 5px;
+    border-bottom: 1px solid #024b51; */
+}
+.country-selector {
+    font-size: 1.11em !important;
+    font-family: 'Store Norske Ja Mono', sans-serif !important;
+}
+
+.wg-drop.country-selector .wgcurrent {
+    border: none !important;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.country-selector .wg-li {
+    font-size: inherit !important;
+    font-weight: 400;
+}
+
+.wg-drop.country-selector a {
+    align-items: center;
+    height: 2.22em !important;
+    padding: 0.48em 1.04em 0.62em 0.34em !important;
+    white-space: nowrap;
+}
+.country-selector a {
+    color: #024b51 !important;
+}
+.wg-drop.country-selector.closed .wgcurrent:after {
+    transform: rotate(0deg) !important;
+}
+
+.wg-drop.country-selector .wgcurrent:after {
+    background-image: url(https://uploads-ssl.webflow.com/6294625d6c5a0b19a4ab1380/62a6dc996fdbc12f71dd102d_globe-outline.svg) !important;
+    background-position: 50% !important;
+    background-size: 1.11em !important;
+    color: transparent !important;
+    content: ""!important;
+    height: 1.11em !important;
+    position: static !important;
+    right: 0 !important;
+    top: 0 !important;
+    transition: none !important;
+    width: 1.11em !important;
+    margin-left: 0.5em;
+}
+
+.wg-drop.country-selector ul {
+    background: transparent !important;
+    border: none !important;
+    /* border-left: 1px solid #024b51 !important;
+    border-right: 1px solid #024b51 !important;
+    border-top: 1px solid #024b51 !important;
+    border-radius: 5px !important;
+    border-bottom: 1px solid #024b51 !important; */
+}
+
+.wg-drop.country-selector li {
+    display: flex !important;
+    justify-content: flex-end !important;
+}
+/* .wg-drop.country-selector ul::after {
+    content: "" !important;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fff7ad;
+    z-index: 10000;
+    top: -5px;
+    left: auto;
+    right: 1.8em;
+    transform: rotate(45deg);
+} */
+@media only screen and (max-width:768px) {
+    .wg-drop.country-selector ul {
+        position: static !important;
+    }
+}
+
