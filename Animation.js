@@ -9,7 +9,7 @@ function animateFromTopBtm() {
             ScrollTrigger.create({
                 trigger: triggerItem,
                 start: "top 80%",
-                markers:true,
+                // markers:true,
                 onEnter: self => {
                     let animItem = self.trigger.querySelectorAll("[data-animate='top-btm']");
                     if (animItem.length > 0) {
