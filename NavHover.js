@@ -3,6 +3,7 @@ const addCSS = css => document.head.appendChild(document.createElement("style"))
 
 const checkIsCurrent = () => {
     let currentActiveElm = document.querySelector(".w--current");
+    let secondActive = document.querySelectorAll(".w--current")[1];
     let isBlogOpen = document.querySelector("[data-page='blog']");
     let navBarElm = document.querySelector(".navbar-wrapper");
     if (currentActiveElm != undefined && navBarElm != undefined) {
@@ -11,6 +12,9 @@ const checkIsCurrent = () => {
         if (getColor != null || getBackGroundColor) {
             addCSS(`.w--current{ background:${getColor}; }`)
             navBarElm.style.backgroundColor = getBackGroundColor;
+        }
+        if(secondActive != undefined){
+            secondActive.style.backgroundColor = getBackGroundColor;
         }
     }
     else if (isBlogOpen != undefined) {
@@ -27,6 +31,12 @@ const checkIsCurrent = () => {
     else {
         if (document.location.pathname == "/thank-you") {
             navBarElm.style.backgroundColor = "#F1E68A";
+        }     
+        else if (document.location.pathname == "/legal/privacy-policy") {
+            navBarElm.style.backgroundColor = "#ededed";
+        }
+        else if (document.location.pathname == "/legal/terms-and-conditions") {
+            navBarElm.style.backgroundColor = "#ededed";
         }
     }
 }
