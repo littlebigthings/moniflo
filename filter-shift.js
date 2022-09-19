@@ -17,7 +17,15 @@ function shiftCmsElm(){
             item.parentElement.remove();
         })
         dropDownElm.remove();
+        checkLastItem(dropDown);
     }
+}
+
+function checkLastItem(dropDown){
+    let dropdownToCheck = dropDown;
+    let lastElm = dropdownToCheck.lastChild;
+    lastElm.style.border = 'none';
+
 }
 if(window.screen.width >= 768){
     shiftCmsElm();

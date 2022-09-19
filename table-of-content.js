@@ -26,6 +26,7 @@ $(window).on("scroll", function () {
         if (isInViewportCenter(ele)) {
             if (ele.getBoundingClientRect().top >= 0 && ele.getBoundingClientRect().top <= 400) {
                 activateCategory(ele.id)
+                if(window.screen.width < 786)updateTableOfContent(ele.id);
             }
         }
     });
@@ -43,7 +44,7 @@ function getAndSetTableContents(eleBlock, tableEle) {
         .find("h2")
         .each(function () {
             const headingTitle = $(this).text();
-            if(headingTitle === "Table of contents" || headingTitle === "Inhaltsverzeichnis") return;
+            if (headingTitle === "Table of contents" || headingTitle === "Inhaltsverzeichnis") return;
             const slugifyedText = convertToSlug(headingTitle);
             $(this).attr("id", slugifyedText);
             $(tableEle).append(
@@ -67,6 +68,14 @@ function scrollFromTop(id) {
         behavior: "smooth",
     });
 }
-window.addEventListener("load",()=>{
+
+function updateTableOfContent(id) {
+    let elementNode = document.querySelector(`[data-id='${id}']`);
+    let parentElm = elementNode.parentElement;
+    elementNode != null && parentElm.insertBefore(elementNode, elementNode.parentElement.firstElementChild);
+}
+
+
+window.addEventListener("load", () => {
     getAndSetTableContents($(".blog-rich-text"), $("[data-block='table-block']"));
 })
