@@ -11,11 +11,16 @@ function cmsInjections(){
         })
         cardData.remove();
     }
+    else{
+        cardData.remove();
+    }
 
     if(ctaCard != undefined && injectCtaElm.length > 0){
         injectCtaElm.forEach(block => {
             block.appendChild(ctaCard.cloneNode(true));
         })
+        ctaCard.remove();
+    }else{
         ctaCard.remove();
     }
 
@@ -29,6 +34,9 @@ function cmsInjections(){
             block.appendChild(paragraph)
         })
         blockQuoteHead.parentElement.remove()
+    }
+    else{
+        blockQuoteHead.parentElement.remove();
     }
 }
 
