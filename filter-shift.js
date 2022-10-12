@@ -18,6 +18,8 @@ function shiftCmsElm(){
         })
         dropDownElm.remove();
         checkLastItem(dropDown);
+    }else{
+        dropDown.parentElement.remove();
     }
 }
 
