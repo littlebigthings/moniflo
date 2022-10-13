@@ -4,8 +4,10 @@ class VERTICALSLIDER {
         this.blockToMakeFix = document.querySelector("[data-block='to-fix']");
         this.allImage = document.querySelectorAll("[data-img]");
         this.slideBlocks = [...document.querySelectorAll("[data-block-slide]")];
-        this.dots = document.querySelectorAll("[data-dot]");
+        this.dots = [...document.querySelectorAll("[data-dot]")];
         this.isSlickActive = false;
+        this.sliderOne = null;
+        this.sliderTwo = null;
         this.init();
     }
 
@@ -93,20 +95,23 @@ class VERTICALSLIDER {
         }
     }
     addClickToDots() {
-        if (this.dots.length <= 0 && this.slideBlocks.length <=0) return;
+        if (this.dots.length <= 0 && this.slideBlocks.length <= 0) return;
         this.dots.forEach(dot => {
             dot.addEventListener("click", (evt) => {
                 let dotToActive = evt.currentTarget.getAttribute("data-dot");
                 if (dotToActive != null) {
-                    if (window.screen.width > 768) {
+                    if (window.screen.width > 991) {
                         let slideToActive = this.slideBlocks.filter(slide => slide.getAttribute("data-block-slide") === dotToActive);
                         slideToActive[0].scrollIntoView({
                             behavior: "smooth",
                             block: "start",
                             inline: "nearest",
                         })
-                    } else if (window.screen.width <= 768) {
+                    } else if (window.screen.width <= 991) {
                         console.log("slickListener")
+                        const currIdx = this.dots.indexOf(evt.currentTarget)
+                        this.sliderOne.slick("slickGoTo", currIdx);
+                        this.sliderTwo.slick("slickGoTo", currIdx);
                     }
                 }
             })
@@ -133,24 +138,100 @@ class VERTICALSLIDER {
     }
 
     addResizer() {
-        if (window.screen.width > 768) {
+        if (window.screen.width > 991) {
+            this.isSlickActive = false;
             this.startTrigger();
-        };
+        }
+        else if (window.screen.width <= 991) {
+            this.isSlickActive = true;
+            // this.switchContainer();
+            this.addSlider();
+        }
         window.addEventListener("resize", () => {
-            if (window.screen.width <= 768 && !this.isSlickActive) {
+            if (window.screen.width <= 991 && !this.isSlickActive) {
                 console.log("activateSlick");
                 this.isSlickActive = true;
+                this.blockToMakeFix.classList.remove("is-fixed");
+                this.blockToMakeFix.classList.remove("is-bottom");
+                this.blockToMakeFix.classList.add("is-top");
                 let Alltrigger = ScrollTrigger.getAll()
                 for (let i = 0; i < Alltrigger.length; i++) {
                     Alltrigger[i].kill(true)
                 }
-            } else if (window.screen.width > 768 && this.isSlickActive) {
+                // this.switchContainer();
+                this.addSlider();
+            } else if (window.screen.width > 991 && this.isSlickActive) {
                 this.isSlickActive = false;
+                if (this.sliderOne) this.sliderOne.slick('unslick');
+                if (this.sliderTwo) this.sliderTwo.slick('unslick');
                 console.log("deActivateSlick");
+                // this.switchContainer();
                 this.startTrigger();
             }
         })
     }
-}
 
-new VERTICALSLIDER;
+    switchContainer() {
+        if (window.screen.width <= 991) {
+            console.log("less than or equal to 991")
+            let block = document.createElement("div");
+            block.setAttribute("data-block", "mobile");
+            if (this.slideBlocks.length > 0) {
+                this.slideBlocks.forEach(slide => {
+                    block.appendChild(slide);
+                })
+                this.sectionToAddTrigger.firstChild.appendChild(block)
+            }
+        } else if (window.screen.width > 991) {
+            console.log("greater than or equal to 991")
+            let blockToremove = document.querySelector("[data-block='mobile']");
+            if (blockToremove != undefined && blockToremove.childElementCount > 0) {
+                let elmentToPushBack = this.sectionToAddTrigger.firstChild;
+                console.log(blockToremove.childNodes)
+                blockToremove.childNodes.forEach(child => {
+                    console.log(child)
+                    elmentToPushBack.appendChild(child);
+                })
+                this.sectionToAddTrigger.firstChild.removeChild(blockToremove);
+            }
+        }
+    }
+
+    addSlider() {
+        this.sliderOne = $(this.allImage[0].parentElement).slick({
+            dots: false,
+            slidesToScroll: 1,
+            slidesToShow: 1,
+            infinite: false,
+            autoplay: false,
+            arrows: false,
+            speed: 200,
+            asNavFor: this.sliderTwo,
+        });
+        this.sliderTwo = $(this.slideBlocks[0].parentElement).slick({
+            dots: false,
+            slidesToScroll: 1,
+            slidesToShow: 1,
+            infinite: false,
+            autoplay: false,
+            arrows: false,
+            speed: 200,
+            appendDots: this.dots,
+            asNavFor: this.sliderOne,
+        });
+        this.sliderOne.on('beforeChange', (event, slick, currentSlide, nextSlide)=>{
+            this.dots.forEach((dot, index) => {
+                if (index == nextSlide) {
+                    this.sliderTwo.slick("slickGoTo", index);
+                    dot.classList.add("is-active");
+                }
+                else {
+                    dot.classList.remove("is-active");
+                }
+            })
+          });
+    }
+}
+window.addEventListener("load", ()=>{
+    new VERTICALSLIDER;
+})
