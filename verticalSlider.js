@@ -15,6 +15,7 @@ class VERTICALSLIDER {
     }
 
     startTrigger() {
+        if (this.slideBlocks.length <= 0) return;
         this.slideBlocks.forEach(slide => {
             ScrollTrigger.create({
                 trigger: slide,
@@ -23,52 +24,59 @@ class VERTICALSLIDER {
                 markers: true,
                 onEnter: self => {
                     let activeSlide = self.trigger.getAttribute("data-block-slide");
-                    this.changeActiveImage(activeSlide);
-                    if (self.trigger === this.slideBlocks[this.slideBlocks.length - 1]) {
-                        this.makeElementFixed(false, true, false);
+                    if (activeSlide != null) {
+                        this.changeActiveImage(activeSlide);
+                        if (self.trigger === this.slideBlocks[this.slideBlocks.length - 1]) {
+                            this.makeElementFixed(false, true, false);
+                        }
+                        else if (self.trigger === this.slideBlocks[0]) {
+                            this.makeElementFixed(false, false, true);
+                        }
+                        console.log("entered")
                     }
-                    else if (self.trigger === this.slideBlocks[0]) {
-                        this.makeElementFixed(false, false, true);
-                    }
-                    console.log("entered")
                 },
                 onEnterBack: self => {
                     let activeSlide = self.trigger.getAttribute("data-block-slide");
-                    this.changeActiveImage(activeSlide);
-                    if (self.trigger === this.slideBlocks[this.slideBlocks.length - 1]) {
-                        this.makeElementFixed(false, false, true);
+                    if (activeSlide != null) {
+                        this.changeActiveImage(activeSlide);
+                        if (self.trigger === this.slideBlocks[this.slideBlocks.length - 1]) {
+                            this.makeElementFixed(false, false, true);
+                        }
+                        else if (self.trigger === this.slideBlocks[0]) {
+                            this.makeElementFixed(false, false, true)
+                        }
+                        console.log("enteredBack")
                     }
-                    else if (self.trigger === this.slideBlocks[0]) {
-                        this.makeElementFixed(false, false, true)
-                    }
-                    console.log("enteredBack")
                 },
                 onLeave: self => {
                     let activeSlide = self.trigger.getAttribute("data-block-slide");
-                    this.changeActiveImage(activeSlide);
-                    if (self.trigger === this.slideBlocks[this.slideBlocks.length - 1]) {
-                        this.makeElementFixed(false, true, false)
+                    if (activeSlide != null) {
+                        this.changeActiveImage(activeSlide);
+                        if (self.trigger === this.slideBlocks[this.slideBlocks.length - 1]) {
+                            this.makeElementFixed(false, true, false)
+                        }
+                        console.log("leave")
                     }
-                    console.log("leave")
-
                 },
                 onLeaveBack: self => {
                     let activeSlide = self.trigger.getAttribute("data-block-slide");
-                    this.changeActiveImage(activeSlide);
-                    if (self.trigger === this.slideBlocks[this.slideBlocks.length - 1]) {
-                        this.makeElementFixed(false, false, true);
+                    if (activeSlide != null) {
+                        this.changeActiveImage(activeSlide);
+                        if (self.trigger === this.slideBlocks[this.slideBlocks.length - 1]) {
+                            this.makeElementFixed(false, false, true);
+                        }
+                        else if (self.trigger === this.slideBlocks[0]) {
+                            this.makeElementFixed(true, false, false)
+                        }
+                        console.log("leaveBack")
                     }
-                    else if (self.trigger === this.slideBlocks[0]) {
-                        this.makeElementFixed(true, false, false)
-                    }
-                    console.log("leaveBack")
-
                 }
             });
         })
     }
 
     makeElementFixed(top, bottom, fixed) {
+        if (this.blockToMakeFix == undefined) return;
         if (!top && bottom && !fixed) {
             this.blockToMakeFix.classList.remove("is-top");
             this.blockToMakeFix.classList.remove("is-fixed");
@@ -85,18 +93,21 @@ class VERTICALSLIDER {
         }
     }
     addClickToDots() {
+        if (this.dots.length <= 0 && this.slideBlocks.length <=0) return;
         this.dots.forEach(dot => {
             dot.addEventListener("click", (evt) => {
                 let dotToActive = evt.currentTarget.getAttribute("data-dot");
-                if(window.screen.width > 768){
-                    let slideToActive = this.slideBlocks.filter(slide => slide.getAttribute("data-block-slide") === dotToActive);
-                    slideToActive[0].scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                        inline: "nearest",
-                    })
-                }else if(window.screen.width <= 768){
-                    console.log("slickListener")
+                if (dotToActive != null) {
+                    if (window.screen.width > 768) {
+                        let slideToActive = this.slideBlocks.filter(slide => slide.getAttribute("data-block-slide") === dotToActive);
+                        slideToActive[0].scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                            inline: "nearest",
+                        })
+                    } else if (window.screen.width <= 768) {
+                        console.log("slickListener")
+                    }
                 }
             })
         })
