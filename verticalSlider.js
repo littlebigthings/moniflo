@@ -22,7 +22,7 @@ class VERTICALSLIDER {
             ScrollTrigger.create({
                 trigger: slide,
                 start: "top 1%",
-                end: "end end",
+                end: "1% end",
                 markers: true,
                 onEnter: self => {
                     let activeSlide = self.trigger.getAttribute("data-block-slide");
@@ -144,7 +144,6 @@ class VERTICALSLIDER {
         }
         else if (window.screen.width <= 991) {
             this.isSlickActive = true;
-            // this.switchContainer();
             this.addSlider();
         }
         window.addEventListener("resize", () => {
@@ -158,43 +157,15 @@ class VERTICALSLIDER {
                 for (let i = 0; i < Alltrigger.length; i++) {
                     Alltrigger[i].kill(true)
                 }
-                // this.switchContainer();
                 this.addSlider();
             } else if (window.screen.width > 991 && this.isSlickActive) {
                 this.isSlickActive = false;
                 if (this.sliderOne) this.sliderOne.slick('unslick');
                 if (this.sliderTwo) this.sliderTwo.slick('unslick');
                 console.log("deActivateSlick");
-                // this.switchContainer();
                 this.startTrigger();
             }
         })
-    }
-
-    switchContainer() {
-        if (window.screen.width <= 991) {
-            console.log("less than or equal to 991")
-            let block = document.createElement("div");
-            block.setAttribute("data-block", "mobile");
-            if (this.slideBlocks.length > 0) {
-                this.slideBlocks.forEach(slide => {
-                    block.appendChild(slide);
-                })
-                this.sectionToAddTrigger.firstChild.appendChild(block)
-            }
-        } else if (window.screen.width > 991) {
-            console.log("greater than or equal to 991")
-            let blockToremove = document.querySelector("[data-block='mobile']");
-            if (blockToremove != undefined && blockToremove.childElementCount > 0) {
-                let elmentToPushBack = this.sectionToAddTrigger.firstChild;
-                console.log(blockToremove.childNodes)
-                blockToremove.childNodes.forEach(child => {
-                    console.log(child)
-                    elmentToPushBack.appendChild(child);
-                })
-                this.sectionToAddTrigger.firstChild.removeChild(blockToremove);
-            }
-        }
     }
 
     addSlider() {
