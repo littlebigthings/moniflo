@@ -21,8 +21,8 @@ class VERTICALSLIDER {
         this.slideBlocks.forEach(slide => {
             ScrollTrigger.create({
                 trigger: slide,
-                start: "top 1%",
-                end: "1% end",
+                start: "top 1px",
+                end: "1px end",
                 markers: true,
                 onEnter: self => {
                     let activeSlide = self.trigger.getAttribute("data-block-slide");
@@ -34,7 +34,6 @@ class VERTICALSLIDER {
                         else if (self.trigger === this.slideBlocks[0]) {
                             this.makeElementFixed(false, false, true);
                         }
-                        console.log("entered")
                     }
                 },
                 onEnterBack: self => {
@@ -47,7 +46,6 @@ class VERTICALSLIDER {
                         else if (self.trigger === this.slideBlocks[0]) {
                             this.makeElementFixed(false, false, true)
                         }
-                        console.log("enteredBack")
                     }
                 },
                 onLeave: self => {
@@ -57,7 +55,6 @@ class VERTICALSLIDER {
                         if (self.trigger === this.slideBlocks[this.slideBlocks.length - 1]) {
                             this.makeElementFixed(false, true, false)
                         }
-                        console.log("leave")
                     }
                 },
                 onLeaveBack: self => {
@@ -70,7 +67,6 @@ class VERTICALSLIDER {
                         else if (self.trigger === this.slideBlocks[0]) {
                             this.makeElementFixed(true, false, false)
                         }
-                        console.log("leaveBack")
                     }
                 }
             });
@@ -83,15 +79,18 @@ class VERTICALSLIDER {
             this.blockToMakeFix.classList.remove("is-top");
             this.blockToMakeFix.classList.remove("is-fixed");
             this.blockToMakeFix.classList.add("is-bottom");
+            // gsap.to(this.blockToMakeFix, {position:"absolute",bottom:0,duration:0.1})
         }
         else if (!top && !bottom && fixed) {
             this.blockToMakeFix.classList.remove("is-top");
             this.blockToMakeFix.classList.remove("is-bottom");
             this.blockToMakeFix.classList.add("is-fixed");
+            // gsap.to(this.blockToMakeFix, {position:"fixed",duration:0.1})
         } else if (top && !bottom && !fixed) {
             this.blockToMakeFix.classList.remove("is-fixed");
             this.blockToMakeFix.classList.remove("is-bottom");
             this.blockToMakeFix.classList.add("is-top");
+            // gsap.to(this.blockToMakeFix, {position:"absolute",top:0,duration:0.1})
         }
     }
     addClickToDots() {
@@ -108,7 +107,6 @@ class VERTICALSLIDER {
                             inline: "nearest",
                         })
                     } else if (window.screen.width <= 991) {
-                        console.log("slickListener")
                         const currIdx = this.dots.indexOf(evt.currentTarget)
                         this.sliderOne.slick("slickGoTo", currIdx);
                         this.sliderTwo.slick("slickGoTo", currIdx);
@@ -148,7 +146,6 @@ class VERTICALSLIDER {
         }
         window.addEventListener("resize", () => {
             if (window.screen.width <= 991 && !this.isSlickActive) {
-                console.log("activateSlick");
                 this.isSlickActive = true;
                 this.blockToMakeFix.classList.remove("is-fixed");
                 this.blockToMakeFix.classList.remove("is-bottom");
@@ -162,7 +159,6 @@ class VERTICALSLIDER {
                 this.isSlickActive = false;
                 if (this.sliderOne) this.sliderOne.slick('unslick');
                 if (this.sliderTwo) this.sliderTwo.slick('unslick');
-                console.log("deActivateSlick");
                 this.startTrigger();
             }
         })
