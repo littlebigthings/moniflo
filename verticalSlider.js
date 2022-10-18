@@ -23,7 +23,7 @@ class VERTICALSLIDER {
                 trigger: slide,
                 start: "top 1px",
                 end: "1px end",
-                markers: true,
+                // markers: true,
                 onEnter: self => {
                     let activeSlide = self.trigger.getAttribute("data-block-slide");
                     if (activeSlide != null) {
