@@ -99,14 +99,14 @@ class VERTICALSLIDER {
             dot.addEventListener("click", (evt) => {
                 let dotToActive = evt.currentTarget.getAttribute("data-dot");
                 if (dotToActive != null) {
-                    if (window.screen.width > 991) {
+                    if (window.innerWidth > 1024) {
                         let slideToActive = this.slideBlocks.filter(slide => slide.getAttribute("data-block-slide") === dotToActive);
                         slideToActive[0].scrollIntoView({
                             behavior: "smooth",
                             block: "start",
                             inline: "nearest",
                         })
-                    } else if (window.screen.width <= 991) {
+                    } else if (window.innerWidth <= 1024) {
                         const currIdx = this.dots.indexOf(evt.currentTarget)
                         this.sliderOne.slick("slickGoTo", currIdx);
                         this.sliderTwo.slick("slickGoTo", currIdx);
@@ -136,16 +136,16 @@ class VERTICALSLIDER {
     }
 
     addResizer() {
-        if (window.screen.width > 991) {
+        if (window.innerWidth > 1024) {
             this.isSlickActive = false;
             this.startTrigger();
         }
-        else if (window.screen.width <= 991) {
+        else if (window.innerWidth <= 1024) {
             this.isSlickActive = true;
             this.addSlider();
         }
         window.addEventListener("resize", () => {
-            if (window.screen.width <= 991 && !this.isSlickActive) {
+            if (window.innerWidth <= 1024 && !this.isSlickActive) {
                 this.isSlickActive = true;
                 this.blockToMakeFix.classList.remove("is-fixed");
                 this.blockToMakeFix.classList.remove("is-bottom");
@@ -155,7 +155,7 @@ class VERTICALSLIDER {
                     Alltrigger[i].kill(true)
                 }
                 this.addSlider();
-            } else if (window.screen.width > 991 && this.isSlickActive) {
+            } else if (window.innerWidth > 1024 && this.isSlickActive) {
                 this.isSlickActive = false;
                 if (this.sliderOne) this.sliderOne.slick('unslick');
                 if (this.sliderTwo) this.sliderTwo.slick('unslick');
