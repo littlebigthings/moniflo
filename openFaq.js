@@ -67,7 +67,6 @@ class OPENFAQ {
     updateUrl() {
         if (!this.updateUrlObj) return;
         const url = new URL(window.location.href);
-        console.log(url)
         Object.keys(this.updateUrlObj).forEach((key) => {
             url.searchParams.delete("open")
             url.searchParams.append(key, this.updateUrlObj[key])
