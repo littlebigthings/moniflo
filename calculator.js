@@ -109,11 +109,11 @@ document.getElementById('quiz-submit-results').addEventListener('click', functio
 
     year_length_elm.textContent = replacingStrings['year_length'];
     payout_interval_elm.textContent = replacingStrings['payout_interval'];
-    savings_elm.textContent = replacingStrings['savings']+"€";
-    interest_rate_elm.textContent = replacingStrings['interest_rate']+"%";
-    final_capital_elm.textContent = replacingStrings['final_capital']+"€";
-    total_deposits_elm.textContent = replacingStrings['total_deposits']+"€";
-    payments_elm.textContent = replacingStrings['payments']+"€";
+    savings_elm.textContent = replacingStrings['savings'] + "€";
+    interest_rate_elm.textContent = replacingStrings['interest_rate'] + "%";
+    final_capital_elm.textContent = replacingStrings['final_capital'] + "€";
+    total_deposits_elm.textContent = replacingStrings['total_deposits'] + "€";
+    payments_elm.textContent = replacingStrings['payments'] + "€";
 
     document.getElementById('result-final-capital').innerHTML = getFormattedNumber(totalFinalCapital, '€')
     document.getElementById('result-total-deposits').innerHTML = getFormattedNumber(totalDeposits, '€')
@@ -158,22 +158,22 @@ const getFormattedNumber = (number, extraText = "") => {
 
 const drawDiagram = (labels, dataZinsen, dataEinzahlungen) => {
     let ZinsenFinalText,
-    EinzahFinalText,
-    GesamtkapitalFinalText,
-    JahreFinalText;
+        EinzahFinalText,
+        GesamtkapitalFinalText,
+        JahreFinalText;
 
     let currentURL = document.location.hostname;
-    if(currentURL==='en.moniflo.com'){
+    if (currentURL === 'en.moniflo.com') {
         ZinsenFinalText = "Interest charges",
-        EinzahFinalText = "Deposits",
-        JahreFinalText = "Years",
-        GesamtkapitalFinalText = "Total capital";
-    }else if(currentURL != 'en.moniflo.com'){
+            EinzahFinalText = "Deposits",
+            JahreFinalText = "Years",
+            GesamtkapitalFinalText = "Total capital";
+    } else if (currentURL != 'en.moniflo.com') {
         ZinsenFinalText = "Zinsen",
-        EinzahFinalText = "Einzahlungen",
-        GesamtkapitalFinalText = "Gesamtkapital",
-        JahreFinalText = "Jahre";
-    } 
+            EinzahFinalText = "Einzahlungen",
+            GesamtkapitalFinalText = "Gesamtkapital",
+            JahreFinalText = "Jahre";
+    }
     const ctx = document.getElementById('results-diagram').getContext('2d');
 
     if (typeof (quizResultChart) !== 'undefined') {
@@ -184,14 +184,14 @@ const drawDiagram = (labels, dataZinsen, dataEinzahlungen) => {
         borderColor: 'red',
         datasets: [
             {
-                label: ZinsenFinalText,
+                label: EinzahFinalText,
                 data: dataZinsen,
                 backgroundColor: [
                     '#024B51'
                 ],
             },
             {
-                label: EinzahFinalText,
+                label: ZinsenFinalText,
                 data: dataEinzahlungen,
                 backgroundColor: [
                     '#F2D79B'
@@ -268,4 +268,4 @@ const drawDiagram = (labels, dataZinsen, dataEinzahlungen) => {
     window.quizResultChart = new Chart(ctx, config);
 
     document.getElementById('results-block').style.display = 'block'
-}    
+}
