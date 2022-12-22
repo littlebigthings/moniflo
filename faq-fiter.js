@@ -50,7 +50,7 @@ class FAQCATEGORIES {
                 faqs.forEach(faq => {
                     let clonedFaq = faqItem.cloneNode(true);
                     clonedFaq.textContent = faq["question"].textContent;
-                    clonedFaq.setAttribute("href", `${faq["url"]+'/?'+'open='+this.convertToSlug(faq["question"].textContent)}`)
+                    clonedFaq.setAttribute("href", `${faq["url"]+'/?'+'faq='+this.convertToSlug(faq["question"].textContent)}`)
                     faqToInsertWrap.appendChild(clonedFaq);
                 })
                }

@@ -2,7 +2,7 @@ class OPENFAQ {
     constructor() {
         this.allFaqElmsArr = document.querySelectorAll("[data-wrapper='faq']");
         this.updateUrlObj = {
-            open: "null",
+            faq: "null",
         }
         this.init();
     }
@@ -12,14 +12,15 @@ class OPENFAQ {
             this.shiftCmsElm();
         }
         this.setSlugValues();
-        this.checkAndOpenFaq();
         this.initOpener();
+        this.checkAndOpenFaq();
     }
 
     setSlugValues() {
         if (this.allFaqElmsArr.length > 0) {
             this.allFaqElmsArr.forEach(faq => {
                 let question = faq.querySelector("[data-item='question']");
+                faq.setAttribute("isopen",false);
                 if (question) {
                     question.setAttribute("data-name", this.convertToSlug(question.textContent))
                 }
@@ -29,7 +30,7 @@ class OPENFAQ {
 
     checkAndOpenFaq() {
         let params = new URLSearchParams(document.location.search);
-        let faqToOpen = params.get("open");
+        let faqToOpen = params.get("faq");
         if (this.allFaqElmsArr.length > 0 && faqToOpen != null) {
             this.allFaqElmsArr.forEach(faq => {
                 let question = faq.querySelector("[data-item='question']");
@@ -37,6 +38,9 @@ class OPENFAQ {
                     let faqQuestion = question.getAttribute("data-name");
                     if(faqQuestion === faqToOpen){
                         faq.click();
+                        faq.scrollIntoView({
+                            block:"center",
+                        });
                     }
                 }
             })
@@ -47,10 +51,18 @@ class OPENFAQ {
         if (this.allFaqElmsArr.length > 0) {
             this.allFaqElmsArr.forEach(faq => {
                 faq.addEventListener("click", (evt) => {
-                    let question = evt.currentTarget.querySelector("[data-item='question']");
+                    let faqItem = evt.currentTarget;
+                    let isFaqOpen = faqItem.getAttribute("isopen")
+                    let question = faqItem.querySelector("[data-item='question']");
                     if (question) {
-                        this.updateUrlObj.open = question.getAttribute("data-name");
-                        this.updateUrl();
+                        this.updateUrlObj.faq = question.getAttribute("data-name");
+                        if(isFaqOpen === "true"){
+                            faqItem.setAttribute("isopen", false);
+                            this.updateUrl(false);
+                        }else if(isFaqOpen === "false"){
+                            faqItem.setAttribute("isopen", true);
+                            this.updateUrl(true);
+                        }
                     }
                 })
             })
@@ -64,12 +76,20 @@ class OPENFAQ {
     }
 
 
-    updateUrl() {
+    updateUrl(addToUrl) {
         if (!this.updateUrlObj) return;
+        let params = new URLSearchParams(document.location.search);
+        let faqToOpen = params.get("faq");
         const url = new URL(window.location.href);
         Object.keys(this.updateUrlObj).forEach((key) => {
-            url.searchParams.delete("open")
-            url.searchParams.append(key, this.updateUrlObj[key])
+            if(faqToOpen ==! this.updateUrlObj.faq){
+                url.searchParams.delete("faq")
+            }
+            // url.searchParams.append(key, this.updateUrlObj[key])
+            if(addToUrl){
+                url.searchParams.delete("faq")
+                url.searchParams.append(key, this.updateUrlObj[key])
+            }
         });
         window.history.pushState({}, "", url);
     }
