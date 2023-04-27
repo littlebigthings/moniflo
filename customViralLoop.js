@@ -84,11 +84,15 @@ class CUSTOMVIRALLOOP {
     // function to handle form submission
     handleSubmission() {
         this.form.addEventListener("submit", () => {
+            this.extraData = {
+                concent: this.concent.checked,
+                language: this.language.value,
+            }
+            // console.log(this.extraData)
             this.userDataTosend = {
                 firstname: this.firstName.value,
                 email: this.email.value,
-                concent: this.concent.checked,
-                language: this.language.value,
+                extraData: this.extraData
             };
             this.handleVerification();
         })

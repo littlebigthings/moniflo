@@ -1,5 +1,5 @@
 class LEADERBOARD {
-    constructor(formObj) {
+    constructor() {
         this.CAMPAIGNID = "IK8UXscavREr5gLFiLx15OKpiew" //replace with the correct one.
 
         this.userRankElementArray = document.querySelectorAll("[data-show='user-rank']");
