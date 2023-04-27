@@ -24,7 +24,7 @@ class CUSTOMVIRALLOOP {
     async startCampaign() {
         // Get campaign by ID
         this.campaign = await ViralLoops.getCampaign(this.CAMPAIGNID);
-        console.log(this.campaign)
+        // console.log(this.campaign)
         this.checkVerification();
     }
 
@@ -35,14 +35,14 @@ class CUSTOMVIRALLOOP {
         if (payload != null) {
             const firstName = payload.user.firstname;
             const email = payload.user.email;
-            console.log(firstName, email);
+            // console.log(firstName, email);
             if (firstName != undefined && email != undefined) {
                 this.verificationOrRedirection(false)
             }
         }
         else if (this.campaign.isUserLoggedIn != undefined) {
             this.userInfo = await this.campaign.getUser(this.campaign.isUserLoggedIn);
-            console.log(this.userInfo)
+            // console.log(this.userInfo)
             if(this.userInfo.referralCode != undefined){
                 this.verificationOrRedirection(false)
             }
@@ -66,16 +66,18 @@ class CUSTOMVIRALLOOP {
     // function to handle verification
     async handleVerification() {
         // Identify user in campaign
-        console.log('[Viral Loops] Identifying...', this.userDataTosend);
+        // console.log('[Viral Loops] Identifying...', this.userDataTosend);
         const response = await this.campaign.identify(this.userDataTosend).catch(error => {
             console.error("[Viral Loops] Participation error", error);
         });
 
         // Log response
-        console.log(response)
+        // console.log(response)
         this.userInfo = await this.campaign.getUser();
         if (this.userInfo.dt != undefined) {
             this.verificationOrRedirection(true);
+        }else if(this.userInfo.referralCode != undefined){
+            this.verificationOrRedirection(false);
         }
     }
 
