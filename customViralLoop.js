@@ -1,15 +1,19 @@
 class CUSTOMVIRALLOOP {
-    constructor(formObj) {
-        this.CAMPAIGNID = "IK8UXscavREr5gLFiLx15OKpiew" //replace with the correct one.
+    constructor() {
+        this.CAMPAIGNID = "4Ej1OCu8xBGLcvwd1485E8et0BQ" //replace with the correct one.
         this.campaign;
-        this.form = formObj.formItem;
-        this.firstName = formObj.firstName;
-        this.email = formObj.email;
-        this.language = formObj.language;
-        this.concent = formObj.concentBox;
-        this.successWrapper = formObj.successWrapper;
-        this.verifyEmailWrapper = formObj.verificationWrapper;
-        this.redirectionWrapper = formObj.redirectionWrapper;
+        this.spinner = document.querySelectorAll("[data-item='lottie']");
+        this.formContainer = document.querySelectorAll("[hide-onload='true']");
+        this.formArray = document.querySelectorAll("[data-wrapper='form']");
+        this.successWrapperArray = document.querySelectorAll("[data-wrapper='success']");
+        this.verifyEmailWrapperArray = document.querySelectorAll("[data-wrapper='verify-email']");
+        this.redirectionWrapperArray = document.querySelectorAll("[data-wrapper='redirection']");
+        this.userEmailVerfiyMessage = document.querySelectorAll("[data-add='user-email']");
+        this.form;
+        this.firstName;
+        this.email;
+        this.language;
+        this.concent;
         this.userInfo = null;
         this.userDataTosend = null;
         this.init();
@@ -30,6 +34,7 @@ class CUSTOMVIRALLOOP {
 
     // function to check if user email is verified or not
     async checkVerification() {
+        const isUserVerfied = localStorage.getItem("isUserVerified");
         const params = new URL(document.location).searchParams;
         const payload = JSON.parse(decodeURIComponent(params.get("payload")));
         if (payload != null) {
@@ -37,29 +42,97 @@ class CUSTOMVIRALLOOP {
             const email = payload.user.email;
             // console.log(firstName, email);
             if (firstName != undefined && email != undefined) {
-                this.verificationOrRedirection(false)
+                let verificationData = JSON.stringify({"isVerified":"yes", email:email})
+                localStorage.setItem("isUserVerified", verificationData)
+                this.verificationOrRedirection({
+                    showContainer: true,
+                    showForm: false,
+                    showVerification: false,
+                    showRedirection: true,
+                })
             }
         }
         else if (this.campaign.isUserLoggedIn != undefined) {
             this.userInfo = await this.campaign.getUser(this.campaign.isUserLoggedIn);
             // console.log(this.userInfo)
-            if(this.userInfo.referralCode != undefined){
-                this.verificationOrRedirection(false)
+            if (this.userInfo.referralCode != undefined) {
+                let verificationData = JSON.stringify({"isVerified":"yes"})
+                localStorage.setItem("isUserVerified", verificationData)
+                this.verificationOrRedirection({
+                    showContainer: true,
+                    showForm: false,
+                    showVerification: false,
+                    showRedirection: true,
+                })
             }
+        } else if (isUserVerfied != null) {
+            let userData = JSON.parse(isUserVerfied)
+            // console.log(userData)
+            if (userData.isVerified === "no") {
+                this.verificationOrRedirection({
+                    showContainer: true,
+                    showForm: false,
+                    showVerification: true,
+                    showRedirection: false,
+                })
+                for (let i = 0; i < this.userEmailVerfiyMessage.length; i++) {
+                    this.userEmailVerfiyMessage[i].textContent = userData.email;
+                }
+            }
+        }
+        else {
+            this.verificationOrRedirection({
+                showContainer: true,
+                showForm: true,
+                showVerification: false,
+                showRedirection: false,
+            })
+            // this.verificationOrRedirection(false, true, true)
         }
     }
 
     // function to show/hide email and redirection wrapper
-    verificationOrRedirection(showVerification) {
-        this.form.classList.add("hide-form")
-        this.successWrapper.style.display = "block";
-        if (showVerification) {
-            this.redirectionWrapper.classList.add("hide");
-            this.verifyEmailWrapper.classList.remove("hide");
-        }
-        else {
-            this.verifyEmailWrapper.classList.add("hide");
-            this.redirectionWrapper.classList.remove("hide");
+    verificationOrRedirection(showHideObj) {
+        if (this.formContainer.length > 0) {
+            for (let i = 0; i < this.formContainer.length; i++) {
+                let formContainer = this.formContainer[i];
+                let lottie = this.spinner[i];
+                let form = this.formArray[i];
+                let success = this.successWrapperArray[i];
+                let verification = this.verifyEmailWrapperArray[i];
+                let redirection = this.redirectionWrapperArray[i];
+
+
+                if (showHideObj.showContainer) {
+                    lottie.style.display = "block";
+                    formContainer.style.visibility = "hidden";
+                    setTimeout(() => {
+                        lottie.style.display = "none";
+                        formContainer.style.visibility = "visible";
+                    }, 500);
+                }
+
+                if (showHideObj.showForm) {
+                    form.classList.remove("hide-form");
+                }
+                else {
+                    form.classList.add("hide-form");
+                }
+
+                if (showHideObj.showVerification) {
+                    redirection.classList.add("hide");
+                    verification.classList.remove("hide");
+                    success.style.display = "block";
+                }
+
+                if (showHideObj.showRedirection) {
+                    verification.classList.add("hide");
+                    redirection.classList.remove("hide");
+                    success.style.display = "block";
+                }
+
+
+            }
         }
     }
 
@@ -74,51 +147,59 @@ class CUSTOMVIRALLOOP {
         // Log response
         // console.log(response)
         this.userInfo = await this.campaign.getUser();
+        console.log(this.userInfo)
         if (this.userInfo.dt != undefined) {
-            this.verificationOrRedirection(true);
-        }else if(this.userInfo.referralCode != undefined){
-            this.verificationOrRedirection(false);
+            for (let i = 0; i < this.userEmailVerfiyMessage.length; i++) {
+                this.userEmailVerfiyMessage[i].textContent = this.userInfo.email;
+            }
+
+            // set user info for verification
+            let verificationData = JSON.stringify({ "isVerified": "no", "email": this.userInfo.email })
+            localStorage.setItem("isUserVerified", verificationData)
+
+            this.verificationOrRedirection({
+                showContainer: true,
+                showForm: false,
+                showVerification: true,
+                showRedirection: false,
+            })
+        } else if (this.userInfo.referralCode != undefined) {
+            this.verificationOrRedirection({
+                showContainer: true,
+                showForm: false,
+                showVerification: false,
+                showRedirection: true,
+            })
         }
     }
 
     // function to handle form submission
     handleSubmission() {
-        this.form.addEventListener("submit", () => {
-            this.extraData = {
-                concent: this.concent.checked,
-                language: this.language.value,
+        if (this.formArray.length > 0) {
+            for (let i = 0; i < this.formArray.length; i++) {
+                let form = this.formArray[i];
+                if (form == undefined) return;
+                let firstName = form.querySelector("[data-item='first-name']");
+                let email = form.querySelector("[data-item='email']");
+                let language = form.querySelector("[data-name='language']");
+                let concent = form.querySelector("[data-item='checkbox']");
+                if (firstName == undefined && email == undefined && language == undefined && concent == undefined) return;
+                form.addEventListener("submit", () => {
+                    let extraData = {
+                        concent: concent.checked,
+                        language: language.value,
+                    }
+                    // console.log(this.extraData)
+                    this.userDataTosend = {
+                        firstname: firstName.value,
+                        email: email.value,
+                        extraData: extraData
+                    };
+                    this.handleVerification();
+                })
             }
-            // console.log(this.extraData)
-            this.userDataTosend = {
-                firstname: this.firstName.value,
-                email: this.email.value,
-                extraData: this.extraData
-            };
-            this.handleVerification();
-        })
-    }
-}
-
-function handleForm() {
-    let formWrapper = document.querySelectorAll("[data-wrapper='form']");
-    if (formWrapper.length > 0) {
-        for (let index = 0; index < formWrapper.length; index++) {
-            let formBlock = formWrapper[index];
-            if (formBlock == undefined) return;
-            let successWrapper = formBlock.parentElement.querySelector("[data-wrapper='success']");
-            let formObj = {
-                formItem: formBlock,
-                firstName: formBlock.querySelector("[data-item='first-name']"),
-                email: formBlock.querySelector("[data-item='email']"),
-                language: formBlock.querySelector("[data-name='language']"),
-                concentBox: formBlock.querySelector("[data-item='checkbox']"),
-                successWrapper:successWrapper,
-                verificationWrapper: successWrapper.querySelector("[data-wrapper='verify-email']"),
-                redirectionWrapper: successWrapper.querySelector("[data-wrapper='redirection']"),
-            }
-            new CUSTOMVIRALLOOP(formObj);
         }
     }
 }
 
-handleForm();
+new CUSTOMVIRALLOOP;

@@ -1,6 +1,6 @@
 class LEADERBOARD {
     constructor() {
-        this.CAMPAIGNID = "IK8UXscavREr5gLFiLx15OKpiew" //replace with the correct one.
+        this.CAMPAIGNID = "4Ej1OCu8xBGLcvwd1485E8et0BQ" //replace with the correct one.
 
         this.userRankElementArray = document.querySelectorAll("[data-show='user-rank']");
         this.treesPlantElement = document.querySelector("[data-show='trees-plant']");
@@ -24,7 +24,6 @@ class LEADERBOARD {
 
     init() {
         this.startCampaign();
-        this.openCloseLeaderBoard();
     }
 
     // function to start campaign
@@ -44,7 +43,8 @@ class LEADERBOARD {
         this.userInfo = await this.campaign.getUser(this.campaign.isUserLoggedIn);
         // console.log(this.userInfo)
         if (this.userInfo.referralCode != undefined) {
-            this.showData()
+            this.showData();
+            this.openCloseLeaderBoard();
         }
         else {
             window.location = "/";
@@ -69,13 +69,15 @@ class LEADERBOARD {
             this.treesPlantElement.textContent = referralCount + 1;
         }
         if (this.userDataElement != undefined && slicedLeaderBoard.length > 0) {
-            for (let leader = 1; leader < leaderBoard.length; leader++) {
-                let { leadname } = leaderBoard[leader];
+            if(slicedLeaderBoard.length>3)this.addUsersWrapper.style.overflow="auto";
+            if(slicedLeaderBoard.length<=3)this.openCloseCta.style.display = "none";
+            for (let leader = 0; leader < slicedLeaderBoard.length; leader++) {
+                let { leadname } = slicedLeaderBoard[leader];
                 let clonedWrapper = this.userDataElement.cloneNode(true);
                 let rank = clonedWrapper.querySelector("[data-show='user-rank']");
                 let userName = clonedWrapper.querySelector("[data-show='user-name']");
-                userName.textContent = leadname;
-                rank.textContent = leader;
+                userName.textContent = leadname.replace(".","");
+                rank.textContent = leader + 1;
                 this.addUsersWrapper.appendChild(clonedWrapper);
             }
             this.userDataElement.remove();
@@ -95,19 +97,27 @@ class LEADERBOARD {
 
     openCloseLeaderBoard(){
         if(this.openCloseCta != undefined){
-            let wrapperHeight;
+            let wrapperOpenHeight;
+            let wrapperCloseHeight;
             this.openCloseCta.setAttribute("open", false);
-            this.addUsersWrapper.setAttribute("height", parseFloat(window.getComputedStyle(this.addUsersWrapper).maxHeight));
-            wrapperHeight = this.addUsersWrapper.getAttribute("height")
+            this.addUsersWrapper.setAttribute("open-height", parseFloat(window.getComputedStyle(this.addUsersWrapper).maxHeight));
+            this.addUsersWrapper.setAttribute("close-height", parseFloat(window.getComputedStyle(this.addUsersWrapper).height));
+
+            wrapperOpenHeight = this.addUsersWrapper.getAttribute("open-height");
+            wrapperCloseHeight = this.addUsersWrapper.getAttribute("close-height");
+
             this.openCloseCta.addEventListener("click",()=>{
                 if(this.openCloseCta.getAttribute("open")=='false'){
                     this.openCloseCta.setAttribute("open", true);
-                    this.addUsersWrapper.style.maxHeight = "none";
-                    this.addUsersWrapper.style.height = "auto";
+                    this.addUsersWrapper.style.overflow="auto";
+                    this.addUsersWrapper.style.height = `${wrapperOpenHeight}px`;
+                    this.openCloseCta.style.transform = "rotate(180deg)";
                 }
                 else if(this.openCloseCta.getAttribute("open")=='true'){
                     this.openCloseCta.setAttribute("open", false);
-                    this.addUsersWrapper.style.height = `${wrapperHeight}px`;
+                    this.addUsersWrapper.style.overflow="hidden";
+                    this.addUsersWrapper.style.height = `${wrapperCloseHeight}px`;
+                    this.openCloseCta.style.transform = "rotate(0deg)";
                 }
             })
         }
