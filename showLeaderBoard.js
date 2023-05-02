@@ -1,6 +1,6 @@
 class LEADERBOARD {
     constructor() {
-        this.CAMPAIGNID = "4Ej1OCu8xBGLcvwd1485E8et0BQ" //replace with the correct one.
+        this.CAMPAIGNID = "vc1bqKEDGe5MKFu27VO3lH3Y8f8" //replace with the correct one.
 
         this.userRankElementArray = document.querySelectorAll("[data-show='user-rank']");
         this.treesPlantElement = document.querySelector("[data-show='trees-plant']");
@@ -41,7 +41,7 @@ class LEADERBOARD {
 
     async checkIfUserVerified() {
         this.userInfo = await this.campaign.getUser(this.campaign.isUserLoggedIn);
-        // console.log(this.userInfo)
+        console.log(this.userInfo)
         if (this.userInfo.referralCode != undefined) {
             this.showData();
             this.openCloseLeaderBoard();
