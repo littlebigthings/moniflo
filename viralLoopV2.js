@@ -56,9 +56,9 @@ class CUSTOMVIRALLOOP {
         const paramsObject = {};
 
         for (const [key, value] of searchParams.entries()) {
-            // if (url.search.includes("verified") && !(key === "referralCode" || key === "refSource")) {
+            if (url.search.includes("verified") && !(key === "referralCode" || key === "refSource")) {
             paramsObject[key] = decodeURIComponent(value);
-            // }
+            }
         }
         console.log(paramsObject)
 
@@ -259,7 +259,7 @@ class CUSTOMVIRALLOOP {
                 console.log(data, "new user get data")
                 let responce = await this.callApi(this.checkUserAPI, this.userDataTosend);
                 this.handleAPIcall(responce)
-            }, 1000)
+            }, 1200)
         }
     }
 

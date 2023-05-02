@@ -1,6 +1,6 @@
 class CUSTOMVIRALLOOP {
     constructor() {
-        this.CAMPAIGNID = "4Ej1OCu8xBGLcvwd1485E8et0BQ" //replace with the correct one.
+        this.CAMPAIGNID = "vc1bqKEDGe5MKFu27VO3lH3Y8f8" //replace with the correct one.
         this.campaign;
         this.spinner = document.querySelectorAll("[data-item='lottie']");
         this.formContainer = document.querySelectorAll("[hide-onload='true']");

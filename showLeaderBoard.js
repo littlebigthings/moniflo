@@ -53,19 +53,16 @@ class LEADERBOARD {
 
     async showData() {
         let { referralCount, referralUrls, leaderBoard, referralCode } = this.userInfo;
-        let { order } = await this.campaign.getOrder(referralCode);
+        let { rank } = await this.campaign.getRank(referralCode);
         let { emailRefUrl, facebookRefUrl, referralUrl, twitterRefUrl, whatsappRefUrl } = referralUrls;
         let slicedLeaderBoard = leaderBoard.slice(0, 100);
-        // console.log(order)
-        // console.log(referralUrls)
 
         if (this.userRankElementArray.length > 0) {
-            for (let rank = 0; rank < this.userRankElementArray.length; rank++) {
-                this.userRankElementArray[rank].textContent = `#${order}`
+            for (let rankItem = 0; rankItem < this.userRankElementArray.length; rankItem++) {
+                this.userRankElementArray[rankItem].textContent = `#${rank}`
             }
         }
         if (this.treesPlantElement != undefined) {
-            // console.log(referralCount)
             this.treesPlantElement.textContent = referralCount + 1;
         }
         if (this.userDataElement != undefined && slicedLeaderBoard.length > 0) {
