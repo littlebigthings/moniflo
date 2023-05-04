@@ -14,9 +14,11 @@ class LEADERBOARD {
         this.gmailShareLink = document.querySelectorAll("[data-ref='gmail']");
         this.whatsappShareLink = document.querySelectorAll("[data-ref='whatsapp']");
 
-        this.referralText = `The top 100 tree planters will win some amazing prizes like early access, shares in funds and Moniflo gear.
-        Don't miss out!
-        `
+        this.referralText = "Join me and the Moniflo community to change the future of finance. Sign up now and win rewards and get a 🌳 planted by @Moniflo";
+        this.referralTextTwitter = "Join me and the Moniflo community to change the future of finance. Sign up now and win rewards and get a 🌳 planted by @Moniflo";
+        this.referralTextWhatsapp = "I just signed up for Moniflo, to redefine the way we are investing. You should take a look. They are planting 🌳's for everyone who signs up.";
+        this.referralSubjectMail = "Join me on Moniflo, and plant a 🌳!";
+        this.referralBodyMail = `Hey, I really think you should check out this app, Moniflo.They are tackling so many great social, environmental, human rights issues by empowering our money! Plus they are planting 🌳's for everyone that joins their community.`;
         this.campaign;
         this.userInfo = null;
         this.init();
@@ -84,9 +86,9 @@ class LEADERBOARD {
             for (let link = 0; link < this.websiteShareLink.length; link++) {
                 this.websiteShareLink[link].textContent = referralUrl;
                 this.facebookShareLink[link].setAttribute("href", this.createSocialMediaShareLink("facebook", facebookRefUrl, this.referralText))
-                this.twitterShareLink[link].setAttribute("href", this.createSocialMediaShareLink("twitter", twitterRefUrl, this.referralText));
-                this.whatsappShareLink[link].setAttribute("href", this.createSocialMediaShareLink("whatsapp", whatsappRefUrl, this.referralText));
-                this.gmailShareLink[link].setAttribute("href", this.createSocialMediaShareLink("gmail", emailRefUrl, this.referralText));
+                this.twitterShareLink[link].setAttribute("href", this.createSocialMediaShareLink("twitter", twitterRefUrl, this.referralTextTwitter));
+                this.whatsappShareLink[link].setAttribute("href", this.createSocialMediaShareLink("whatsapp", whatsappRefUrl, this.referralTextWhatsapp));
+                this.gmailShareLink[link].setAttribute("href", this.createSocialMediaShareLink("gmail", emailRefUrl, this.referralSubjectMail, this.referralBodyMail));
             }
         }
 
@@ -112,7 +114,7 @@ class LEADERBOARD {
                 }
                 else if(this.openCloseCta.getAttribute("open")=='true'){
                     this.openCloseCta.setAttribute("open", false);
-                    this.addUsersWrapper.style.overflow="hidden";
+                    // this.addUsersWrapper.style.overflow="hidden";
                     this.addUsersWrapper.style.height = `${wrapperCloseHeight}px`;
                     this.openCloseCta.style.transform = "rotate(0deg)";
                 }
@@ -121,16 +123,16 @@ class LEADERBOARD {
     }
 
     // Function to create social media share links
-    createSocialMediaShareLink(platform, url, title) {
+    createSocialMediaShareLink(platform, url, title, description="") {
         switch (platform) {
             case 'facebook':
                 return `https://www.facebook.com/sharer.php?u=${encodeURIComponent(url)}`;
             case 'twitter':
                 return `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
             case 'gmail':
-                return `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${title}\n${url}`)}`;
+                return `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${description}\n${url}`)}`;
             case 'whatsapp':
-                return `https://wa.me/?text=${encodeURIComponent(url)}`;
+                return `https://wa.me/?text=${encodeURIComponent(`${title}\n${url}`)}`;
             default:
                 return '';
         }

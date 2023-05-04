@@ -11,14 +11,11 @@ class CUSTOMVIRALLOOP {
         this.userEmailVerfiyMessage = document.querySelectorAll("[data-add='user-email']");
         this.updateUserAPI = "https://hook.eu1.make.com/ynwewti7bn5mmvrrebj5p7eb8qnoas65"; //replace with the correct one.
         this.checkUserAPI = "https://hook.eu1.make.com/ddoo7idt8e1yyjagdi572t3sl3tnrkmy";
-        // this.form;
-        // this.firstName;
-        // this.email;
-        // this.language;
-        // this.concent;
+        
         this.referralCode = null;
         this.refSource = null;
         this.userInfo = null;
+        this.referrerInfo= null;
         this.userDataTosend = null;
         this.userLocalData = null;
         this.init();
@@ -91,6 +88,9 @@ class CUSTOMVIRALLOOP {
         console.log(response)
         if (response) {
             this.userInfo = await this.campaign.getUser();
+            // need to sort this out
+            this.referrerInfo = await this.campaign.getReferrer();
+            console.log(this.referrerInfo)
             this.userDataTosend = JSON.stringify({
                 firstname: userData.firstname,
                 email: userData.email,
@@ -211,7 +211,9 @@ class CUSTOMVIRALLOOP {
                 let language = form.querySelector("[data-name='language']");
                 let consent = form.querySelector("[data-item='checkbox']");
                 if (firstName == undefined && email == undefined && language == undefined && consent == undefined) return;
-                form.addEventListener("submit", async () => {
+                form.addEventListener("submit", async (evt) => {
+                    evt.preventDefault();
+                    evt.stopImmediatePropagation();
                     // console.log(this.extraData)
                     let userObj = {
                         firstname: firstName.value,
@@ -244,7 +246,7 @@ class CUSTOMVIRALLOOP {
     }
 
     async handleAPIcall(data) {
-        // console.log(data)
+        console.log(data)
         if (data.attributes) {
             console.log(data, "already exists")
             this.updateLocalStorage("userAPIData", JSON.stringify(data));
