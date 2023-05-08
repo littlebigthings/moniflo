@@ -14,11 +14,13 @@ class LEADERBOARD {
         this.gmailShareLink = document.querySelectorAll("[data-ref='gmail']");
         this.whatsappShareLink = document.querySelectorAll("[data-ref='whatsapp']");
 
-        this.referralText = "Join me and the Moniflo community to change the future of finance. Sign up now and win rewards and get a 🌳 planted by @Moniflo";
-        this.referralTextTwitter = "Join me and the Moniflo community to change the future of finance. Sign up now and win rewards and get a 🌳 planted by @Moniflo";
-        this.referralTextWhatsapp = "I just signed up for Moniflo, to redefine the way we are investing. You should take a look. They are planting 🌳's for everyone who signs up.";
-        this.referralSubjectMail = "Join me on Moniflo, and plant a 🌳!";
-        this.referralBodyMail = `Hey, I really think you should check out this app, Moniflo.They are tackling so many great social, environmental, human rights issues by empowering our money! Plus they are planting 🌳's for everyone that joins their community.`;
+        this.referralText = `👋Hey, guess what? I have some exciting news - I just joined the @Moniflo community!🙌🌍\nIf you care about the planet and want to invest in companies that prioritize sustainability and social responsibility, then you should join us.🌿 \nI'm happy to be a part of this community and do my part for the environment. And with Moniflo's transparency, you can see exactly where your money is going and what impact it's making.🌍\nSo come join me and let's grow this community together!\nHere's my invite link:`;
+        
+        this.referralTextTwitter = `👋Hey, guess what? I just joined the @moniflo_app community 🌍 and I'm excited to do my part for our planet!🌱\nCome join me and let's grow this community together with values-based transparency.\nHere's my invite link:`;
+       
+        this.referralSubjectMail = "👋Hey, guess what? I have some exciting news - I just joined the @Moniflo community! 🙌🌍";
+        this.referralBodyMail = `If you care about the planet and want to invest in companies that prioritize sustainability and social responsibility, then you should join us.🌿\nI'm happy to be a part of this community and do my part for the environment. And with Moniflo's transparency, you can see exactly where your money is going and what impact it's making.🌍\nSo come join me and let's grow this community together!\nHere's my invite link:`;
+        
         this.campaign;
         this.userInfo = null;
         this.init();
@@ -43,7 +45,7 @@ class LEADERBOARD {
 
     async checkIfUserVerified() {
         this.userInfo = await this.campaign.getUser(this.campaign.isUserLoggedIn);
-        console.log(this.userInfo)
+        // console.log(this.userInfo)
         if (this.userInfo.referralCode != undefined) {
             this.showData();
             this.openCloseLeaderBoard();
@@ -87,7 +89,7 @@ class LEADERBOARD {
                 this.websiteShareLink[link].textContent = referralUrl;
                 this.facebookShareLink[link].setAttribute("href", this.createSocialMediaShareLink("facebook", facebookRefUrl, this.referralText))
                 this.twitterShareLink[link].setAttribute("href", this.createSocialMediaShareLink("twitter", twitterRefUrl, this.referralTextTwitter));
-                this.whatsappShareLink[link].setAttribute("href", this.createSocialMediaShareLink("whatsapp", whatsappRefUrl, this.referralTextWhatsapp));
+                this.whatsappShareLink[link].setAttribute("href", this.createSocialMediaShareLink("whatsapp", whatsappRefUrl, this.referralText));
                 this.gmailShareLink[link].setAttribute("href", this.createSocialMediaShareLink("gmail", emailRefUrl, this.referralSubjectMail, this.referralBodyMail));
             }
         }
@@ -126,13 +128,13 @@ class LEADERBOARD {
     createSocialMediaShareLink(platform, url, title, description="") {
         switch (platform) {
             case 'facebook':
-                return `https://www.facebook.com/sharer.php?u=${encodeURIComponent(url)}`;
+                return `https://www.facebook.com/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(`${title}\n${url}`)}\nLet's make some impact together!🌱💪\n${encodeURIComponent(`#Moniflo #MonifloCommunity #SustainableInvestment #ImpactInvesting #InvestingForGood`)}`;
             case 'twitter':
-                return `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+                return `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${title}${encodeURIComponent(url)}\n${encodeURIComponent(`#Moniflo #MonifloCommunity #SustainableInvestment #ImpactInvesting #InvestingForGood`)}`;
             case 'gmail':
-                return `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${description}\n${url}`)}`;
+                return `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${description}\n${url}\nLet's make some impact together!🌱💪\n#Moniflo #MonifloCommunity #SustainableInvestment #ImpactInvesting #InvestingForGood`)}`;
             case 'whatsapp':
-                return `https://wa.me/?text=${encodeURIComponent(`${title}\n${url}`)}`;
+                return `https://wa.me/?text=${encodeURIComponent(`${title}${url}\nLet's make some impact together!🌱💪\n#Moniflo #MonifloCommunity #SustainableInvestment #ImpactInvesting #InvestingForGood`)}`;
             default:
                 return '';
         }
