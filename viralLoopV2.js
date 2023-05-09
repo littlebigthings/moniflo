@@ -9,8 +9,10 @@ class CUSTOMVIRALLOOP {
         this.verifyEmailWrapperArray = document.querySelectorAll("[data-wrapper='verify-email']");
         this.redirectionWrapperArray = document.querySelectorAll("[data-wrapper='redirection']");
         this.userEmailVerfiyMessage = document.querySelectorAll("[data-add='user-email']");
-        this.updateUserAPI = "https://hook.eu1.make.com/ynwewti7bn5mmvrrebj5p7eb8qnoas65"; //replace with the correct one.
-        this.checkUserAPI = "https://hook.eu1.make.com/ddoo7idt8e1yyjagdi572t3sl3tnrkmy";
+        // this.updateUserAPI = "https://hook.eu1.make.com/ynwewti7bn5mmvrrebj5p7eb8qnoas65"; //replace with the correct one.
+        // this.checkUserAPI = "https://hook.eu1.make.com/ddoo7idt8e1yyjagdi572t3sl3tnrkmy";
+        this.updateUserAPI = "https://hook.eu1.make.com/849pes9kccdrqgxsa60qn1zbvzdr1hh1"; //final one.
+        this.checkUserAPI = "https://hook.eu1.make.com/e04ixvtb7oxshiu9b7bj15bsxp5ommlw";
         
         this.referralCode = null;
         this.refSource = null;
@@ -293,9 +295,10 @@ class CUSTOMVIRALLOOP {
 
     getEncodedURL(userData) {
         const baseUrl = new URL(document.location).origin;
+        const path = new URL(document.location).pathname;
         const searchParams = new URLSearchParams(userData);
 
-        const url = baseUrl + '?' + searchParams;
+        const url = baseUrl + path + '?' + searchParams;
         return encodeURI(url)
     }
 }
