@@ -80,6 +80,10 @@ class CUSTOMVIRALLOOP {
     }
 
     async registerAndverifyUser(userData) {
+        
+        userData = {...userData, "consents": {
+            "consent": "true"
+          },}
         // Identify user in campaign
         // console.log('[Viral Loops] Identifying...', this.userDataTosend);
         const response = await this.campaign.identify(userData).catch(error => {
