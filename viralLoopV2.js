@@ -263,7 +263,7 @@ class CUSTOMVIRALLOOP {
                 console.log(data, "new user get data")
                 let responce = await this.callApi(this.checkUserAPI, this.userDataTosend);
                 this.handleAPIcall(responce)
-            }, 1200)
+            }, 3000)
         }
     }
 
