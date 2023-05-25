@@ -13,11 +13,11 @@ class CUSTOMVIRALLOOP {
         // this.checkUserAPI = "https://hook.eu1.make.com/ddoo7idt8e1yyjagdi572t3sl3tnrkmy";
         this.updateUserAPI = "https://hook.eu1.make.com/849pes9kccdrqgxsa60qn1zbvzdr1hh1"; //final one.
         this.checkUserAPI = "https://hook.eu1.make.com/e04ixvtb7oxshiu9b7bj15bsxp5ommlw";
-        
+
         this.referralCode = null;
         this.refSource = null;
         this.userInfo = null;
-        this.referrerInfo= null;
+        this.referrerInfo = null;
         this.userDataTosend = null;
         this.userLocalData = null;
         this.init();
@@ -34,7 +34,7 @@ class CUSTOMVIRALLOOP {
         if (this.campaign.isUserLoggedIn == undefined) {
             this.checkSearchURL();
             this.handleSubmission();
-        }else if(this.campaign.isUserLoggedIn != undefined){
+        } else if (this.campaign.isUserLoggedIn != undefined) {
             this.userInfo = await this.campaign.getUser(this.campaign.isUserLoggedIn);
             // console.log(this.userInfo)
             if (this.userInfo.referralCode != undefined) {
@@ -43,7 +43,7 @@ class CUSTOMVIRALLOOP {
                     showForm: false,
                     showVerification: false,
                     showRedirection: true,
-                    showLottie:false,
+                    showLottie: false,
                 })
             }
         }
@@ -55,35 +55,67 @@ class CUSTOMVIRALLOOP {
         const paramsObject = {};
 
         for (const [key, value] of searchParams.entries()) {
-            if (url.search.includes("verified") && !(key === "referralCode" || key === "refSource")) {
+            // if (url.search.includes("verified") && !(key === "referralCode" || key === "refSource")) {
             paramsObject[key] = decodeURIComponent(value);
-            }
+            // }
         }
         console.log(paramsObject)
-
         if (Object.keys(paramsObject).length === 0) {
             console.log("Object is empty");
-            this.checkUserExists();
+            this.checkUserExistsViaApi();
         } else {
             if (paramsObject.verified && paramsObject.email) {
                 console.log("Object is not empty");
-                this.registerAndverifyUser(paramsObject);
+                this.registerAndverifyUser({ 
+                    firstname: paramsObject.firstname,
+                    email: paramsObject.email,
 
-            } else if (paramsObject.referralCode && paramsObject.refSource) {
+                 });
+
+            } else if (paramsObject.referralCode || paramsObject.refSource) {
                 console.log("got refSource & referral code");
                 this.referralCode = paramsObject.referralCode;
                 this.refSource = paramsObject.refSource;
-                console.log(this.refSource, this.referralCode)
-                this.checkUserExists();
+                console.log(this.refSource, this.referralCode, "ref data from viral loop")
+                this.checkUserExistsViaApi();
             }
         }
     }
 
+    async checkUserExistsViaApi() {
+        this.userLocalData = this.getLocalStorage("userAPIData") != null && JSON.parse(this.getLocalStorage("userAPIData"));
+        if (this.userLocalData != null) {
+            // if user exists
+            if (this.userLocalData.attributes) {
+                // Check if user is verified/not verified
+                if (this.userLocalData.attributes.email != undefined) {
+                    let userObj = JSON.stringify({email:this.userLocalData.attributes.email});
+                  let checkOnceViaApi = await this.callApi(this.checkUserAPI, userObj);
+                  this.handleAPIcall(checkOnceViaApi)
+
+                }
+            }
+        }
+        // if user not exists show form
+        if (this.userLocalData == false) {
+            this.verificationOrRedirection({
+                showContainer: true,
+                showForm: true,
+                showVerification: false,
+                showRedirection: false,
+                showLottie: false,
+            })
+        }
+    }
+
     async registerAndverifyUser(userData) {
-        
-        userData = {...userData, "consents": {
-            "consent": "true"
-          },}
+
+        userData = {
+            ...userData, "consents": {
+                "consent": "true",
+                // "2":"true"
+            },
+        }
         // Identify user in campaign
         // console.log('[Viral Loops] Identifying...', this.userDataTosend);
         const response = await this.campaign.identify(userData).catch(error => {
@@ -91,7 +123,7 @@ class CUSTOMVIRALLOOP {
         });
 
         // Log response
-        console.log(response)
+        console.log(response, "user registered on viral loop")
         if (response) {
             this.userInfo = await this.campaign.getUser();
             // need to sort this out
@@ -106,14 +138,15 @@ class CUSTOMVIRALLOOP {
                 refSource: userData.refSource,
                 verified: true,
             })
+            console.log(this.userDataTosend)
             let updateUser = await this.callApi(this.updateUserAPI, this.userDataTosend);
-            console.log(updateUser)
+            console.log(updateUser, "update verified user")
             this.handleAPIcall(updateUser)
         }
 
     }
 
-    checkUserExists() {
+    async checkUserExists() {
         this.userLocalData = this.getLocalStorage("userAPIData") != null && JSON.parse(this.getLocalStorage("userAPIData"));
         // Check with localStorage if user data exists.
         if (this.userLocalData != null) {
@@ -132,7 +165,7 @@ class CUSTOMVIRALLOOP {
 
                 } else {
                     // Not verified show verify email
-                    console.log(this.userLocalData)
+                    console.log(this.userLocalData, "localStorage data")
                     for (let i = 0; i < this.userEmailVerfiyMessage.length; i++) {
                         this.userEmailVerfiyMessage[i].textContent = this.userLocalData.attributes.email;
                     }
@@ -252,7 +285,7 @@ class CUSTOMVIRALLOOP {
     }
 
     async handleAPIcall(data) {
-        console.log(data)
+        // console.log(data)
         if (data.attributes) {
             console.log(data, "already exists")
             this.updateLocalStorage("userAPIData", JSON.stringify(data));
