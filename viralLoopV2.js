@@ -66,11 +66,11 @@ class CUSTOMVIRALLOOP {
         } else {
             if (paramsObject.verified && paramsObject.email) {
                 console.log("Object is not empty");
-                this.registerAndverifyUser({ 
+                this.registerAndverifyUser({
                     firstname: paramsObject.firstname,
                     email: paramsObject.email,
 
-                 });
+                });
 
             } else if (paramsObject.referralCode || paramsObject.refSource) {
                 console.log("got refSource & referral code");
@@ -89,9 +89,9 @@ class CUSTOMVIRALLOOP {
             if (this.userLocalData.attributes) {
                 // Check if user is verified/not verified
                 if (this.userLocalData.attributes.email != undefined) {
-                    let userObj = JSON.stringify({email:this.userLocalData.attributes.email});
-                  let checkOnceViaApi = await this.callApi(this.checkUserAPI, userObj);
-                  this.handleAPIcall(checkOnceViaApi)
+                    let userObj = JSON.stringify({ email: this.userLocalData.attributes.email });
+                    let checkOnceViaApi = await this.callApi(this.checkUserAPI, userObj);
+                    this.handleAPIcall(checkOnceViaApi)
 
                 }
             }
@@ -249,6 +249,13 @@ class CUSTOMVIRALLOOP {
                 let email = form.querySelector("[data-item='email']");
                 let language = form.querySelector("[data-name='language']");
                 let consent = form.querySelector("[data-item='checkbox']");
+
+                // GTM params values
+                let data_key = form.getAttribute("[data-tracking-status]");
+                let data_value = form.getAttribute("[data-tracking-key]");;
+                let event_action = form.getAttribute("[data-tracking-value]");;
+                let page_url = window.location.href;
+
                 if (firstName == undefined && email == undefined && language == undefined && consent == undefined) return;
                 form.addEventListener("submit", async (evt) => {
                     evt.preventDefault();
@@ -276,9 +283,14 @@ class CUSTOMVIRALLOOP {
                         showLottie: true,
                     })
 
+                     // Call GTM for form submission
+                     window.dataLayer = window.dataLayer || [];
+                     window.dataLayer.push({
+                         'event': 'FormSubmit',
+                         "gtm.element": form
+                     });
                     let verifyUser = await this.callApi(this.checkUserAPI, this.userDataTosend);
                     this.handleAPIcall(verifyUser)
-
                 })
             }
         }
@@ -287,9 +299,16 @@ class CUSTOMVIRALLOOP {
     async handleAPIcall(data) {
         // console.log(data)
         if (data.attributes) {
-            console.log(data, "already exists")
-            this.updateLocalStorage("userAPIData", JSON.stringify(data));
-            this.checkUserExists()
+            if (data.attributes.verified != undefined) {
+                console.log(data, "already exists")
+                this.updateLocalStorage("userAPIData", JSON.stringify(data));
+                this.checkUserExists()
+            }
+            else {
+                console.log(data, "add new user no verified found")
+                let responce = await this.callApi(this.updateUserAPI, this.userDataTosend);
+                this.handleAPIcall(responce)
+            }
         } else if (!data.attributes && data.data == "user not exists") {
             console.log(data, "add new user")
             let responce = await this.callApi(this.updateUserAPI, this.userDataTosend);
@@ -301,6 +320,11 @@ class CUSTOMVIRALLOOP {
                 let responce = await this.callApi(this.checkUserAPI, this.userDataTosend);
                 this.handleAPIcall(responce)
             }, 3000)
+        }
+        else {
+            console.log(data, "add new user no attributes present")
+            let responce = await this.callApi(this.updateUserAPI, this.userDataTosend);
+            this.handleAPIcall(responce)
         }
     }
 
