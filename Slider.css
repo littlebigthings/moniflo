@@ -1,0 +1,7 @@
+[slick-slider="parent"] .slide-item.slick-slide {
+    display: flex !important;
+}
+
+[slick-slider="parent"] .slick-list{
+    overflow: visible !important;
+}
