@@ -23,6 +23,8 @@ class LEADERBOARD {
         
         this.campaign;
         this.userInfo = null;
+
+        this.localStorageData = localStorage.getItem("userAPIData");
         this.init();
     }
 
@@ -34,21 +36,36 @@ class LEADERBOARD {
     async startCampaign() {
         // Get campaign by ID
         this.campaign = await ViralLoops.getCampaign(this.CAMPAIGNID);
-        // console.log(this.campaign)
         if (this.campaign.isUserLoggedIn != undefined) {
-            this.checkIfUserVerified();
+            this.checkIfUserVerified(this.campaign.isUserLoggedIn);
         }
-        else {
+        else if(this.localStorageData != null) {
+            let paresedUserInfo = JSON.parse(this.localStorageData);
+            let userCode = {
+                email:paresedUserInfo.attributes.email,
+                firstName:paresedUserInfo.attributes.firstname,
+            };
+           this.checkIfUserVerified(userCode);
+        }
+        else{
             window.location = "/";
         }
     }
 
-    async checkIfUserVerified() {
-        this.userInfo = await this.campaign.getUser(this.campaign.isUserLoggedIn);
-        // console.log(this.userInfo)
-        if (this.userInfo.referralCode != undefined) {
+    async checkIfUserVerified(userCode) {
+        this.userInfo = await this.campaign.getUser(userCode);
+        if (this.userInfo != undefined) {
             this.showData();
             this.openCloseLeaderBoard();
+        }
+        else if(this.localStorageData != null){
+            this.userInfo = await this.campaign.identify(userCode);
+            if (this.userInfo != undefined) {
+                this.showData();
+                this.openCloseLeaderBoard();
+            }else{
+                window.location = "/";
+            }
         }
         else {
             window.location = "/";
