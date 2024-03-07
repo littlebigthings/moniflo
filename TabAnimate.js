@@ -51,7 +51,11 @@ class TabSlider {
                 }
             })
         }
-        this.$sliderTabs[0].click();
+
+        const otherTabs = this.$sliderTabs.filter((tab, index) => index != 0);
+        [...otherTabs].forEach(this.closeTab);
+
+        // this.$sliderTabs[0].click();
     }
 
 

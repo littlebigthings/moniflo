@@ -9,8 +9,7 @@ class CUSTOMVIRALLOOP {
         this.verifyEmailWrapperArray = document.querySelectorAll("[data-wrapper='verify-email']");
         this.redirectionWrapperArray = document.querySelectorAll("[data-wrapper='redirection']");
         this.userEmailVerfiyMessage = document.querySelectorAll("[data-add='user-email']");
-        // this.updateUserAPI = "https://hook.eu1.make.com/ynwewti7bn5mmvrrebj5p7eb8qnoas65"; //replace with the correct one.
-        // this.checkUserAPI = "https://hook.eu1.make.com/ddoo7idt8e1yyjagdi572t3sl3tnrkmy";
+       
         this.updateUserAPI = "https://hook.eu1.make.com/849pes9kccdrqgxsa60qn1zbvzdr1hh1"; //final one.
         this.checkUserAPI = "https://hook.eu1.make.com/e04ixvtb7oxshiu9b7bj15bsxp5ommlw";
 
@@ -25,8 +24,6 @@ class CUSTOMVIRALLOOP {
 
     init() {
         this.activateCampaign();
-        // this.checkSearchURL();
-        // this.handleSubmission();
     }
 
     async activateCampaign() {
@@ -36,7 +33,6 @@ class CUSTOMVIRALLOOP {
             this.handleSubmission();
         } else if (this.campaign.isUserLoggedIn != undefined) {
             this.userInfo = await this.campaign.getUser(this.campaign.isUserLoggedIn);
-            // console.log(this.userInfo)
             if (this.userInfo.referralCode != undefined) {
                 this.verificationOrRedirection({
                     showContainer: true,
@@ -55,17 +51,13 @@ class CUSTOMVIRALLOOP {
         const paramsObject = {};
 
         for (const [key, value] of searchParams.entries()) {
-            // if (url.search.includes("verified") && !(key === "referralCode" || key === "refSource")) {
             paramsObject[key] = decodeURIComponent(value);
-            // }
         }
         console.log(paramsObject)
         if (Object.keys(paramsObject).length === 0) {
-            console.log("Object is empty");
             this.checkUserExistsViaApi();
         } else {
             if (paramsObject.verified && paramsObject.email) {
-                console.log("Object is not empty");
                 this.registerAndverifyUser({
                     firstname: paramsObject.firstname,
                     email: paramsObject.email,
@@ -73,11 +65,20 @@ class CUSTOMVIRALLOOP {
                 });
 
             } else if (paramsObject.referralCode || paramsObject.refSource) {
-                console.log("got refSource & referral code");
                 this.referralCode = paramsObject.referralCode;
                 this.refSource = paramsObject.refSource;
                 console.log(this.refSource, this.referralCode, "ref data from viral loop")
                 this.checkUserExistsViaApi();
+            }
+            // added patch fix
+            else{
+                this.verificationOrRedirection({
+                    showContainer: true,
+                    showForm: true,
+                    showVerification: false,
+                    showRedirection: false,
+                    showLottie: false,
+                })
             }
         }
     }
